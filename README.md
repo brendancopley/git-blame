@@ -122,7 +122,7 @@ Feel free to modify the script according to your needs. If you make improvements
 
 ```bash
 # Open in your favorite editor
-nano gb
+vi gb
 ```
 
 ## Contribution
