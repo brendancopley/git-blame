@@ -1,15 +1,14 @@
-# git-blame
 # Git Blame - CLI Tool (`gb`)
 
-`Git Blame (gb)` is a powerful CLI tool that helps you analyze the top contributors to any file in a Git repository. This tool automates the `git blame` command while providing enhanced features such as contributor rankings, Git blame ignore file setup, and color-coded output for improved readability.
+`Git Blame (gb)` is a powerful CLI tool that helps you analyze the top contributors to any file in a Git repository. This tool automates the `git blame` command and provides enhanced features such as contributor rankings, commit timestamps, and support for both Linux and macOS.
 
 ## Features
 - **Top Contributors:** Analyze the top contributors to any file in a Git repository.
-- **Color-Coded Output:** Errors and success messages are color-coded for better clarity.
-- **Git Blame Ignore File Setup:** Automatically sets up `.git-blame-ignore-revs` on the first run.
+- **Commit Timestamp:** Display the most recent commit date for each contributor.
+- **Cross-Platform:** Supports both Linux and macOS for timestamp conversion.
 - **Flexible Input:** Allows input either through command-line arguments or interactive prompts.
 - **Configurable Output:** Customize the number of top contributors to display.
-  
+
 ## Installation
 
 ### Prerequisites:
@@ -19,7 +18,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/brendancopley/git-blame-cli.git
+git clone https://github.com/your-username/git-blame-cli.git
 cd git-blame-cli
 ```
 
@@ -55,7 +54,7 @@ source ~/.zshrc
 ## Usage
 
 ### Basic Usage
-To analyze a file and display the top 3 contributors:
+To analyze a file and display the top 3 contributors with their most recent commit dates:
 
 ```bash
 gb path/to/file
@@ -68,21 +67,26 @@ To display a custom number of top contributors (e.g., top 5):
 gb path/to/file 5
 ```
 
+### Example Output:
+```bash
+$ gb src/main.cpp
+Processing file: src/main.cpp
+40 contributions by john.doe@example.com (Last commit: 2023-09-01 12:34:56)
+35 contributions by jane.smith@example.com (Last commit: 2023-08-28 09:12:34)
+25 contributions by alice.johnson@example.com (Last commit: 2023-07-15 17:45:23)
+Operation completed successfully.
+```
+
+### Cross-Platform Support (macOS & Linux)
+The tool automatically detects if it's running on macOS or Linux and adjusts the timestamp conversion process accordingly:
+- **Linux**: Uses `date -d @<timestamp>` to convert UNIX timestamps to a human-readable date.
+- **macOS**: Uses `date -r <timestamp>` for the same conversion.
+
 ### Interactive Mode
 If no file path is provided, `gb` will prompt you to enter one interactively:
 
 ```bash
 gb
-```
-
-### Example Output:
-```bash
-$ gb src/main.cpp
-Processing file: src/main.cpp
-   40 John Doe
-   35 Jane Smith
-   25 Alice Johnson
-Operation completed successfully.
 ```
 
 ## First Time Setup
@@ -96,42 +100,13 @@ Processing file: path/to/file
 Operation completed successfully.
 ```
 
-## Advanced Usage
-
-### Blame Ignore File
-If you have a `.git-blame-ignore-revs` file set up to ignore certain commits (e.g., large formatting changes or refactoring), the `gb` command will automatically respect this file after the first setup.
-
-You can manually update this file in your repository’s root directory:
-
-```bash
-echo <commit-hash> >> .git-blame-ignore-revs
-```
-
-## Development
-
-### Running the Script Locally
-
-To run the script locally without installation:
-
-```bash
-./gb path/to/file
-```
-
-### Modifying the Script
-Feel free to modify the script according to your needs. If you make improvements, contributions are welcome!
-
-```bash
-# Open in your favorite editor
-vi gb
-```
-
 ## Contribution
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Commit your changes: `git commit -m 'Add my feature'`
-4. Push to the branch: `git push origin feature/my-feature`
-5. Create a new Pull Request
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/my-feature`.
+3. Commit your changes: `git commit -m 'Add my feature'`.
+4. Push to the branch: `git push origin feature/my-feature`.
+5. Create a new Pull Request.
 
 ## License
 
