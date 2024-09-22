@@ -5,6 +5,22 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
+# Check if the system is macOS (Darwin) or Linux
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  # macOS date command format
+  date_cmd='date -r'
+else
+  # Linux date command format
+  date_cmd='date -d @'
+fi
+
+# Set up git blame ignoreRevsFile if not already configured
+if ! git config blame.ignoreRevsFile > /dev/null 2>&1; then
+  echo -e "${GREEN}Setting up git blame ignoreRevsFile...${NC}"
+  git config blame.ignoreRevsFile .git-blame-ignore-revs
+  echo -e "${GREEN}Git blame ignoreRevsFile is now set to .git-blame-ignore-revs${NC}"
+fi
+
 # Check if the file path is passed as an argument, else prompt the user
 if [ -z "$1" ]; then
   read -p "Enter the file path: " filePath
@@ -21,11 +37,33 @@ if [ ! -f "$filePath" ]; then
   exit 1
 fi
 
+# Check if the directory is a git repository
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+  echo -e "${RED}Error: This is not a git repository.${NC}"
+  exit 1
+fi
+
+# Check if the file is tracked by git
+if ! git ls-files --error-unmatch "$filePath" > /dev/null 2>&1; then
+  echo -e "${RED}Error: The file '$filePath' is not tracked by git.${NC}"
+  exit 1
+fi
+
 # Success message before processing
 echo -e "${GREEN}Processing file: $filePath${NC}"
 
-# Run the original command with the user-supplied or provided file path
-git blame "$filePath" | awk '{print $2 $3}' | sort | uniq -c | sort -nr | head -n "$numResults"
+# Use git blame --line-porcelain to extract author emails and timestamps
+git blame --line-porcelain "$filePath" | awk -v date_cmd="$date_cmd" '
+  /^author-mail/ { email = $2 }
+  /^author-time/ { time = $2; emails[email]++; if (time > last_commit[email]) last_commit[email] = time }
+  END {
+    for (e in emails) {
+      cmd = date_cmd " " last_commit[e] " +\"%Y-%m-%d %H:%M:%S\""
+      cmd | getline formatted_time
+      close(cmd)
+      printf("%d contributions by %s (Last commit: %s)\n", emails[e], e, formatted_time)
+    }
+  }' | sort -nr | head -n "$numResults"
 
 # Completion message
 echo -e "${GREEN}Operation completed successfully.${NC}"
