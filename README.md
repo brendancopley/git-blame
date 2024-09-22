@@ -18,7 +18,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/git-blame-cli.git
+git clone https://github.com/brendancopley/git-blame-cli.git
 cd git-blame-cli
 ```
 
