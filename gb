@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Define color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+# Check if the file path is passed as an argument, else prompt the user
+if [ -z "$1" ]; then
+  read -p "Enter the file path: " filePath
+else
+  filePath=$1
+fi
+
+# Set the default number of results to display
+numResults=${2:-3} # Default to 3 if no second argument is passed
+
+# Check if the provided file path is valid
+if [ ! -f "$filePath" ]; then
+  echo -e "${RED}Error: $filePath is not a valid file.${NC}"
+  exit 1
+fi
+
+# Success message before processing
+echo -e "${GREEN}Processing file: $filePath${NC}"
+
+# Run the original command with the user-supplied or provided file path
+git blame "$filePath" | awk '{print $2 $3}' | sort | uniq -c | sort -nr | head -n "$numResults"
+
+# Completion message
+echo -e "${GREEN}Operation completed successfully.${NC}"
