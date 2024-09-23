@@ -2,6 +2,9 @@
 
 `Git Blame (gb)` is a powerful CLI tool that helps you analyze the top contributors to any file in a Git repository. This tool automates the `git blame` command and provides enhanced features such as contributor rankings, commit timestamps, and support for both Linux and macOS.
 
+<img width="150" alt="Screenshot 2024-09-22 at 5 13 11 PM" src="https://github.com/user-attachments/assets/4cd7cc45-2728-41d0-b116-00827c3a9358">
+
+
 ## Features
 - **Top Contributors:** Analyze the top contributors to any file in a Git repository.
 - **Commit Timestamp:** Display the most recent commit date for each contributor.
